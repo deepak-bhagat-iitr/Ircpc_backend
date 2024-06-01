@@ -3,12 +3,6 @@ const router = express.Router();
 const Credentials = require('../schema/Credentials')
 const bcrypt = require('bcryptjs');
 const { response } = require('express');
-import('node-fetch').then(fetchModule => {
-  const fetch = fetchModule.default;
-
-  // Your existing code that uses fetch goes here
-  // Ensure that you wrap your existing code inside this callback function
-});
 const Profile = require('../schema/Profile');
 // var jwt = require('jsonwebtoken');
 
@@ -58,7 +52,7 @@ router.post('/login', async (req, res) => {
   //     }
   // }
   // const token = jwt.sign(token_creater, secret);
-  impdata = {
+  impdata={
     success: true,
     username: '21118014',
     person: {
@@ -78,6 +72,7 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/channeli', async (req, res) => {
+
   const client_id = "ghTOIagj0bWyje4tT33ooKMbGiSmbwL7oD0LdlpM";
   const client_secret = "E7WLEzBRzmLwq2hxcl10dQPfX4iw8z8VLERkGnuFvfHf5ZdnqDV9JoteO7npISadedzM3KmedrwnHCcQWV8H8K1UucMkytnXByQ5eu8jiesboROqGYuyPmFYvqtzo29X";
   const grant_type = "authorization_code";
@@ -90,7 +85,7 @@ router.post('/channeli', async (req, res) => {
   data.append('grant_type', grant_type);
   data.append('code', authorization_code);
   data.append('redirect_uri', redirect_uri);
-
+  console.log(data)
   try {
     const response = await fetch(retrieve_token_uri, {
       method: 'POST',
@@ -99,36 +94,27 @@ router.post('/channeli', async (req, res) => {
       },
       body: data
     });
-
+    console.log(response)
     if (!response.ok) {
-      throw new Error('Failed to retrieve access token');
+      throw new Error('Failed to retrieve access token13');
     }
-
     const tokenData = await response.json();
-    const access_token = tokenData.access_token;
-    const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
-    const userDataResponse = await fetch(retrieve_data_uri, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${access_token}`
-      }
-    });
-
-    if (!userDataResponse.ok) {
-      throw new Error('Failed to retrieve user data');
-    }
-
-    const userData = await userDataResponse.json();
-    // Redirect the user to the specified URI after successful authentication
-    res.redirect(redirect_uri);
+      const access_token = tokenData.access_token;
+      const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
+        const userDataResponse =await fetch(retrieve_data_uri, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${access_token}`
+          }
+        }).then(response => response.json()).then(data=> {
+          res.send(data)
+          // console.log(data)
+        })
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
-});
-
-
-
+})
 
 router.post('/getuser', async (req, res) => {
 
