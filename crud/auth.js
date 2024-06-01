@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
   //     }
   // }
   // const token = jwt.sign(token_creater, secret);
-  impdata={
+  impdata = {
     success: true,
     username: '21118014',
     person: {
@@ -77,7 +77,7 @@ router.post('/channeli', async (req, res) => {
   const client_secret = "E7WLEzBRzmLwq2hxcl10dQPfX4iw8z8VLERkGnuFvfHf5ZdnqDV9JoteO7npISadedzM3KmedrwnHCcQWV8H8K1UucMkytnXByQ5eu8jiesboROqGYuyPmFYvqtzo29X";
   const grant_type = "authorization_code";
   const authorization_code = req.body.authcode
-  const redirect_uri = "http://localhost:8080/";
+  const redirect_uri = "https://ircpc-frontend.vercel.app/";
   const retrieve_token_uri = "https://channeli.in/open_auth/token/";
   const data = new URLSearchParams();
   data.append('client_id', client_id);
@@ -99,17 +99,17 @@ router.post('/channeli', async (req, res) => {
       throw new Error('Failed to retrieve access token13');
     }
     const tokenData = await response.json();
-      const access_token = tokenData.access_token;
-      const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
-        const userDataResponse =await fetch(retrieve_data_uri, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${access_token}`
-          }
-        }).then(response => response.json()).then(data=> {
-          res.send(data)
-          // console.log(data)
-        })
+    const access_token = tokenData.access_token;
+    const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
+    const userDataResponse = await fetch(retrieve_data_uri, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${access_token}`
+      }
+    }).then(response => response.json()).then(data => {
+      res.send(data)
+      // console.log(data)
+    })
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");

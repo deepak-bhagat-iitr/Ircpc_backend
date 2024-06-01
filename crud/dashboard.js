@@ -19,56 +19,7 @@ router.get("/getpatents", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-router.post("/addpatents", async (req, res) => {
-  try {
-    const {
-      title,
-      fieldOfInvention,
-      detailedDescription,
-      inventor,
-      committeeMembers,
-      pdf,
-      status
-    } = req.body;
-    // const pdf = req.file ? {
-    //   data: req.file.buffer,
-    //   contentType: req.file.mimetype
-    // } : null;
-    console.log(pdf);
-    console.log(status);
-    const newPatent = new Patents({
-      title,
-      fieldOfInvention,
-      detailedDescription,
-      inventor,
-      committeeMembers,
-      pdf,
-      status
-    });
-    console.log(newPatent);
-    const savedPatent = await newPatent.save();
 
-    const receiverEmail = "deepak988088@gmail.com";
-    const senderEmail = "iprcelliitr84@gmail.com";
-    const emailSubject = "Patent is added";
-    const emailMessage = "Congratulations! You have successfully added your patent claim";
-
-    // Send email notifications
-    try {
-      await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
-      const websiteURL = `http://localhost:8080/ViewPatent?id=${savedPatent._id}`;
-      const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
-      await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);
-    } catch (emailError) {
-      console.error("Error sending email:", emailError.message);
-    }
-
-    res.json(savedPatent); // Send the saved patent as response
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server Error");
-  }
-});
 
 
 

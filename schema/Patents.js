@@ -8,8 +8,15 @@ const committeeMemberSchema = new mongoose.Schema({
   department: { type: String, required: true }
 });
 
+// Define the PDF schema
+const pdfSchema = new mongoose.Schema({
+    name: String,
+    path: String
+});
+
 // Define the patent schema
 const patentSchema = new Schema({
+  email: { type: String, required: true },
   title: { type: String, required: true },
   fieldOfInvention: { type: String, required: true },
   detailedDescription: { type: String, required: true },
@@ -23,7 +30,7 @@ const patentSchema = new Schema({
     DSRIC: { type: Boolean, default: false }
   },
   committeeMembers: [committeeMemberSchema], // Array of committee members
-  pdf: { type: String, required: true }, // Field for storing PDF data
+  pdf: pdfSchema, // Include the PDF schema as a subdocument
   dateOfApplication: { type: Date, default: Date.now } // Corrected the typo here
 });
 
