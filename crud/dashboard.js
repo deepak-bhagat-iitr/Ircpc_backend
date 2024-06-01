@@ -323,7 +323,7 @@ router.get(
         const receiverEmail = member.email;
         const senderEmail = "riyajindal769@gmail.com";
         const emailSubject = "Invitation to Join Committee";
-        const emailMessage = `You have been approved to join the committee. Click the following link to accept: https://ircpc-backend.onrender.com/api/profiles/accept-invite/${token} or reject: https://ircpc-backend.onrender.com/api/profiles/reject-invite/${token} the invitation `;
+        const emailMessage = `You have been approved to join the committee. Click the following link to accept: http://localhost:5000/api/profiles/accept-invite/${token} or reject: http://localhost:5000/api/profiles/reject-invite/${token} the invitation `;
         await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
       });
       res.status(200).json({ message: "Emails sent successfully" });
