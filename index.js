@@ -23,8 +23,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+
 app.use(cors({
-  origin: 'https://ircpc-frontend.vercel.app',
+  origin: ['https://ircpc-frontend.vercel.app', 'http://localhost:8080'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
