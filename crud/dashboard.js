@@ -62,7 +62,7 @@ router.put("/patents/:id/approve", async (req, res) => {
     await patent.save();
     const receiverEmail = "athgupta2005@gmail.com";
     const senderEmail = "riyajindal769@gmail.com";
-    const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     const emailSubject = "Patent is approved ";
     const emailMessage =
       `A new patent is approved by HOD. Please visit the website to see the patent details and approve the commitee : ${websiteURL}`;
@@ -323,7 +323,7 @@ router.get(
         const receiverEmail = member.email;
         const senderEmail = "riyajindal769@gmail.com";
         const emailSubject = "Invitation to Join Committee";
-        const emailMessage = `You have been approved to join the committee. Click the following link to accept: http://localhost:5000/api/profiles/accept-invite/${token} or reject: http://localhost:5000/api/profiles/reject-invite/${token} the invitation `;
+        const emailMessage = `You have been approved to join the committee. Click the following link to accept: https://ircpc-backend.onrender.com/api/profiles/accept-invite/${token} or reject: https://ircpc-backend.onrender.com/api/profiles/reject-invite/${token} the invitation `;
         await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
       });
       res.status(200).json({ message: "Emails sent successfully" });
