@@ -39,6 +39,7 @@ router.get("/patents/:email", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
 router.get("/patent/:id", async (req, res) => {
   try {
     const patent = await Patents.findById(req.params.id);
