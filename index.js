@@ -5,6 +5,8 @@ var cors = require('cors');
 require("dotenv").config();
 const multer = require("multer");
 const path = require('path');
+const Patents = require('./schema/Patents'); // Ensure you import the Patents model
+
 import('node-fetch').then(fetchModule => {
   const fetch = fetchModule.default;
 
@@ -129,7 +131,6 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
       pdf: details,
       status
     });
-
     console.log(newPatent);
     const savedPatent = await newPatent.save();
 
