@@ -12,6 +12,7 @@ router.get("/getpatents", async (req, res) => {
   try {
     const allPatents = await Patents.find();
     // filter according to users bad me laga denge
+    // console.log(allPatents)
     res.json(allPatents);
   }
   catch (error) {
@@ -63,7 +64,7 @@ router.put("/patents/:id/approve", async (req, res) => {
     await patent.save();
     const receiverEmail = "athgupta2005@gmail.com";
     const senderEmail = "riyajindal769@gmail.com";
-    const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
+    const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
     const emailSubject = "Patent is approved ";
     const emailMessage =
       `A new patent is approved by HOD. Please visit the website to see the patent details and approve the commitee : ${websiteURL}`;
@@ -324,7 +325,7 @@ router.get(
         const receiverEmail = member.email;
         const senderEmail = "riyajindal769@gmail.com";
         const emailSubject = "Invitation to Join Committee";
-        const emailMessage = `You have been approved to join the committee. Click the following link to accept: http://localhost:5000/api/profiles/accept-invite/${token} or reject: http://localhost:5000/api/profiles/reject-invite/${token} the invitation `;
+        const emailMessage = `You have been approved to join the committee. Click the following link to accept: https://ircpc-backend.onrender.com/api/profiles/accept-invite/${token} or reject: https://ircpc-backend.onrender.com/api/profiles/reject-invite/${token} the invitation `;
         await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
       });
       res.status(200).json({ message: "Emails sent successfully" });
@@ -399,43 +400,34 @@ router.get("/reject-invite/:token", async (req, res) => {
 router.post("/dateofmeeting/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { dateOfMeeting, timeofMeeting } = req.body;
+    const { dateOfMeeting } = req.body;
     const patent = await Patents.findById(id);
     if (!patent) {
       return res.status(404).json({ message: "Patent not found" });
     }
     const parsedDateOfMeeting = moment(dateOfMeeting, true);
     if (!parsedDateOfMeeting.isValid()) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Invalid date format. ",
-        });
+      return res.status(400).json({
+        message: "Invalid date format.",
+      });
     }
     patent.dateOfMeeting = parsedDateOfMeeting.toDate(); // Convert moment object to JavaScript Date object
     await patent.save();
-    const committeeMembers = patent.committeeMembers.filter(
-      (member) => member.approved == true
-    );
+    const committeeMembers = patent.committeeMembers;
     committeeMembers.forEach(async (member) => {
       const receiverEmail = member.email;
-      const senderEmail = "riyajindal769@gmail.com";
+      const senderEmail = "iprcelliitr84@gmail.com";
       const emailSubject = "Date for IPAC Meeting";
-      const emailMessage = `The date for the IPAC meeting has been set to ${dateOfMeeting} at ${timeofMeeting}. Please visit the IR Cell on the date .`;
-      await sendMail(
-        receiverEmail,
-        senderEmail,
-        emailSubject,
-        emailMessage
-      );
+      const emailMessage = `The date for the IPAC meeting has been set to ${parsedDateOfMeeting.format('DD-MM-YYYY HH:mm')}. Please visit the IR Cell on the date.`;
+      await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
     });
-
+    console.log("EMAIL sent successfully!");
     res.status(200).json({ message: "Emails sent successfully" });
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
   }
 });
+
+
 module.exports = router;

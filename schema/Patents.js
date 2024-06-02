@@ -10,8 +10,8 @@ const committeeMemberSchema = new mongoose.Schema({
 
 // Define the PDF schema
 const pdfSchema = new mongoose.Schema({
-    name: String,
-    path: String
+  name: String,
+  path: String
 });
 
 // Define the patent schema
@@ -24,6 +24,7 @@ const patentSchema = new Schema({
     name: String,
     background: String,
   },
+  comments: String,
   status: {
     HOD: { type: Boolean, default: false },
     ADI: { type: Boolean, default: false },

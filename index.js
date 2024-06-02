@@ -66,6 +66,7 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
       inventor,
       committeeMembers,
       pdf: details,
+      comments: "no comments yet",
       status
     });
     console.log(newPatent);
@@ -79,7 +80,7 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
     // Send email notifications
     try {
       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
-      const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatent?id=${savedPatent._id}`;
+      const websiteURL = `http://localhost:8080/ViewPatent?id=${savedPatent._id}`;
       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);
     } catch (emailError) {
@@ -102,6 +103,31 @@ app.get('/api/profiles/addpatents/pdfs', async (req, res) => {
     res.status(500).send(err);
   }
 });
+app.post("/api/profiles/updatecomment/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { comment } = req.body;
+
+    // Update the comment field of the specified patent
+    const result = await Patents.updateOne(
+      { _id: id },
+      { $set: { comments: comment } }
+    );
+
+    if (result.nModified === 0) {
+      return res.status(404).json({ message: "Patent not found or comment not updated" });
+    }
+
+    // Retrieve the updated patent to return it in the response
+    const updatedPatent = await Patents.findById(id);
+
+    res.json(updatedPatent);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
