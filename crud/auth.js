@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
   //     }
   // }
   // const token = jwt.sign(token_creater, secret);
-  impdata = {
+  impdata={
     success: true,
     username: '21118014',
     person: {
@@ -71,59 +71,50 @@ router.post('/login', async (req, res) => {
   res.json(impdata);
 })
 
-
 router.post('/channeli', async (req, res) => {
+
   const client_id = "ghTOIagj0bWyje4tT33ooKMbGiSmbwL7oD0LdlpM";
   const client_secret = "E7WLEzBRzmLwq2hxcl10dQPfX4iw8z8VLERkGnuFvfHf5ZdnqDV9JoteO7npISadedzM3KmedrwnHCcQWV8H8K1UucMkytnXByQ5eu8jiesboROqGYuyPmFYvqtzo29X";
   const grant_type = "authorization_code";
-  const authorization_code = req.body.authcode;
-  const redirect_uri = "https://ircpc-frontend.vercel.app";
-  const retrieve_token_uri = "https://channeli.in/open_auth/token";
-
+  const authorization_code = req.body.authcode
+  const redirect_uri = "https://ircpc-frontend.vercel.app/";
+  const retrieve_token_uri = "https://channeli.in/open_auth/token/";
   const data = new URLSearchParams();
   data.append('client_id', client_id);
   data.append('client_secret', client_secret);
   data.append('grant_type', grant_type);
   data.append('code', authorization_code);
   data.append('redirect_uri', redirect_uri);
-
+  console.log(data)
   try {
     const response = await fetch(retrieve_token_uri, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: data.toString()
+      body: data
     });
-
+    console.log(response)
     if (!response.ok) {
-      throw new Error('Failed to retrieve access token');
+      throw new Error('Failed to retrieve access token13');
     }
-
     const tokenData = await response.json();
-    const access_token = tokenData.access_token;
-
-    const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data";
-    const userDataResponse = await fetch(retrieve_data_uri, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${access_token}`
-      }
-    });
-
-    if (!userDataResponse.ok) {
-      throw new Error('Failed to retrieve user data');
-    }
-
-    const userData = await userDataResponse.json();
-    res.status(200).json(userData);
-
+      const access_token = tokenData.access_token;
+      const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
+        const userDataResponse =await fetch(retrieve_data_uri, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${access_token}`
+          }
+        }).then(response => response.json()).then(data=> {
+          res.send(data)
+          // console.log(data)
+        })
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
-});
-
+})
 
 router.post('/getuser', async (req, res) => {
 
