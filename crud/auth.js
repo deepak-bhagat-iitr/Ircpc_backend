@@ -79,6 +79,7 @@ router.post('/channeli', async (req, res) => {
   const authorization_code = req.body.authcode;
   const redirect_uri = "https://ircpc-frontend.vercel.app/";
   const retrieve_token_uri = "https://channeli.in/open_auth/token/";
+  const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
 
   const data = new URLSearchParams();
   data.append('client_id', client_id);
@@ -88,7 +89,8 @@ router.post('/channeli', async (req, res) => {
   data.append('redirect_uri', redirect_uri);
 
   try {
-    const response = await fetch(retrieve_token_uri, {
+    // Request the access token
+    const tokenResponse = await fetch(retrieve_token_uri, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -96,20 +98,22 @@ router.post('/channeli', async (req, res) => {
       body: data.toString()
     });
 
-    if (!response.ok) {
+    if (!tokenResponse.ok) {
       throw new Error('Failed to retrieve access token');
     }
 
-    const tokenData = await response.json();
+    const tokenData = await tokenResponse.json();
     const access_token = tokenData.access_token;
 
-    const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
-    const userDataResponse = await fetch(retrieve_data_uri, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${access_token}`
-      }
-    });
+    // Fetch user data in parallel
+    const [userDataResponse] = await Promise.all([
+      fetch(retrieve_data_uri, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${access_token}`
+        }
+      })
+    ]);
 
     if (!userDataResponse.ok) {
       throw new Error('Failed to retrieve user data');
@@ -123,6 +127,7 @@ router.post('/channeli', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 router.post('/getuser', async (req, res) => {
