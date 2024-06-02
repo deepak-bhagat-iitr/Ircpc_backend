@@ -78,7 +78,12 @@ router.post('/channeli', async (req, res) => {
     const client_secret = "E7WLEzBRzmLwq2hxcl10dQPfX4iw8z8VLERkGnuFvfHf5ZdnqDV9JoteO7npISadedzM3KmedrwnHCcQWV8H8K1UucMkytnXByQ5eu8jiesboROqGYuyPmFYvqtzo29X";
     const redirect_uri = "https://ircpc-frontend.vercel.app/";
     const retrieve_token_uri = "https://channeli.in/open_auth/token/";
+    const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
 
+    // Start timer for measuring performance
+    console.time("tokenAndUserDataFetch");
+
+    // Retrieve access token
     const tokenResponse = await fetch(retrieve_token_uri, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -97,8 +102,8 @@ router.post('/channeli', async (req, res) => {
 
     const tokenData = await tokenResponse.json();
     const access_token = tokenData.access_token;
-    const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
 
+    // Retrieve user data
     const userDataResponse = await fetch(retrieve_data_uri, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${access_token}` }
@@ -109,6 +114,10 @@ router.post('/channeli', async (req, res) => {
     }
 
     const userData = await userDataResponse.json();
+    console.log(userData);
+    // End timer and log the performance time
+    console.timeEnd("tokenAndUserDataFetch");
+
     res.json(userData);
   } catch (error) {
     console.error(error.message);
