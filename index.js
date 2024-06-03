@@ -25,7 +25,7 @@ const upload = multer({ storage: storage });
 
 
 app.use(cors({
-  origin: ['https://ircpc-frontend.vercel.app', 'http://localhost:8080'],
+  origin: ['https://ircpc-frontend.vercel.app', 'https://ircpc-frontend.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -80,7 +80,7 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
     // Send email notifications
     try {
       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
-      const websiteURL = `http://localhost:8080/ViewPatent?id=${savedPatent._id}`;
+      const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatent?id=${savedPatent._id}`;
       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);
     } catch (emailError) {
@@ -109,7 +109,7 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
 //     try {
 //       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
 
-//       const websiteURL = `http://localhost:8080/ViewPatent?id=${savedPatentId}`;
+//       const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatent?id=${savedPatentId}`;
 //       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
 
 //       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);

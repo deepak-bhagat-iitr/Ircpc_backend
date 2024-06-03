@@ -72,7 +72,7 @@ router.put("/patents/:id/approve", async (req, res) => {
 
     const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     const senderGmail = "iprcelliitr84@gmail.com";
-    const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     const Subject = "Patent is approved by HOD";
     const Message = `HOD approve the details, please visit the website to verify: ${websiteURL}`;
 
@@ -101,7 +101,7 @@ router.put("/patents/:id/reject", async (req, res) => {
 
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
-    const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     const emailSubject = "Patent is rejected";
     const emailMessage = `A patent has been rejected by HOD. Please visit the website to see the patent details: ${websiteURL}`;
 
@@ -135,7 +135,7 @@ router.put("/DSRI/patents/:id/approve", async (req, res) => {
 
     const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     const senderGmail = "iprcelliitr84@gmail.com";
-    const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     const Subject = "Patent is approved by HOD";
     const Message = `DSRI add some comment and approve`;
 
@@ -164,14 +164,14 @@ router.put("DSRI/patents/:id/reject", async (req, res) => {
 
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
-    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    // const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     const emailSubject = "Patent is rejected";
     const emailMessage = `DSRI add some comment and rejected`;
 
 
     const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     const senderGmail = "iprcelliitr84@gmail.com";
-    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    // const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     const Subject = "Patent is approved by HOD";
     const Message = `DSRI add some comment and rejected`;
 
@@ -267,7 +267,7 @@ router.post("/ADI/approve/comemb/:id", async (req, res) => {
 
     // const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     // const senderGmail = "iprcelliitr84@gmail.com";
-    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    // const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     // const Subject = "Patent is approved by HOD";
     // const Message = `HOD approve the details, please visit the website to verify: ${websiteURL}`;
     await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
@@ -290,7 +290,7 @@ router.post("/DSRI/recommendation/:id", async (req, res) => {
 
     const receiverEmail = "deepak988088@gmail.com";
     const senderEmail = "iprcelliitr84@gmail.com";
-    const websiteURL = `http://localhost:8080/DSRI?id=${req.params.id}`;
+    const websiteURL = `https://ircpc-frontend.vercel.app/DSRI?id=${req.params.id}`;
 
     const emailSubject = "Patent Committee Members Updated";
     const emailMessage =
@@ -300,7 +300,7 @@ router.post("/DSRI/recommendation/:id", async (req, res) => {
 
     // const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     // const senderGmail = "iprcelliitr84@gmail.com";
-    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    // const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     // const Subject = "Patent is approved by HOD";
     // const Message = `HOD approve the details, please visit the website to verify: ${websiteURL}`;
     await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
@@ -463,7 +463,7 @@ router.get(
         const receiverEmail = member.email;
         const senderEmail = "riyajindal769@gmail.com";
         const emailSubject = "Invitation to Join Committee";
-        const emailMessage = `You have been approved to join the committee. Click the following link to accept: http://localhost:5000/api/profiles/accept-invite/${token} or reject: http://localhost:5000/api/profiles/reject-invite/${token} the invitation `;
+        const emailMessage = `You have been approved to join the committee. Click the following link to accept: https://ircpc-backend.onrender.com/api/profiles/accept-invite/${token} or reject: https://ircpc-backend.onrender.com/api/profiles/reject-invite/${token} the invitation `;
         await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
       });
       res.status(200).json({ message: "Emails sent successfully" });
