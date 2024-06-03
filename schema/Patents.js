@@ -28,8 +28,10 @@ const patentSchema = new Schema({
   status: {
     HOD: { type: Boolean, default: false },
     ADI: { type: Boolean, default: false },
+    // COMMEM: { type: Boolean, default: false },
     DSRIC: { type: Boolean, default: false }
   },
+  DSRICOMM: String,
   committeeMembers: [committeeMemberSchema], // Array of committee members
   pdf: pdfSchema, // Include the PDF schema as a subdocument
   dateOfApplication: { type: Date, default: Date.now } // Corrected the typo here

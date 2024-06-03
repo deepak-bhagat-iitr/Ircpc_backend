@@ -53,6 +53,8 @@ router.get("/patent/:id", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+// Approve patent route
 router.put("/patents/:id/approve", async (req, res) => {
   try {
     const patent = await Patents.findById(req.params.id);
@@ -62,20 +64,31 @@ router.put("/patents/:id/approve", async (req, res) => {
 
     patent.status.HOD = true;
     await patent.save();
-    const receiverEmail = "athgupta2005@gmail.com";
-    const senderEmail = "riyajindal769@gmail.com";
+
+    const receiverEmail = patent.email;
+    const senderEmail = "iprcelliitr84@gmail.com";
+    const emailSubject = "Patent is approved";
+    const emailMessage = `A new patent is approved by HOD`;
+
+    const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
+    const senderGmail = "iprcelliitr84@gmail.com";
     const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
-    const emailSubject = "Patent is approved ";
-    const emailMessage =
-      `A new patent is approved by HOD. Please visit the website to see the patent details and approve the commitee : ${websiteURL}`;
+    const Subject = "Patent is approved by HOD";
+    const Message = `HOD approve the details, please visit the website to verify: ${websiteURL}`;
+
+
+
 
     await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+    await sendMail(AdiEmail, senderGmail, Subject, Message);
     res.json(patent);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
   }
 });
+
+// Reject patent route
 router.put("/patents/:id/reject", async (req, res) => {
   try {
     const patent = await Patents.findById(req.params.id);
@@ -86,95 +99,220 @@ router.put("/patents/:id/reject", async (req, res) => {
     patent.status.HOD = false;
     await patent.save();
 
+    const receiverEmail = patent.email;
+    const senderEmail = "iprcelliitr84@gmail.com";
+    const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const emailSubject = "Patent is rejected";
+    const emailMessage = `A patent has been rejected by HOD. Please visit the website to see the patent details: ${websiteURL}`;
+
+    await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
     res.json(patent);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
   }
 });
-router.put("/updatepatent/:id", async (req, res) => {
+
+
+
+
+
+// Approve patent route
+router.put("/DSRI/patents/:id/approve", async (req, res) => {
   try {
-    const {
-      email,
-      title,
-      fieldOfInvention,
-      background,
-      summary,
-      drawings,
-      detailedDescription,
-      claims,
-      inventor,
-      references,
-      acknowledgments,
-      committeeMembers,
-    } = req.body;
-
-    // Create a newPatent object
-    const newPatent = {};
-    if (email) {
-      newPatent.email = email;
-    }
-    if (title) {
-      newPatent.title = title;
-    }
-    if (fieldOfInvention) {
-      newPatent.fieldOfInvention = fieldOfInvention;
-    }
-    if (background) {
-      newPatent.background = background;
-    }
-    if (summary) {
-      newPatent.summary = summary;
-    }
-    if (drawings) {
-      newPatent.drawings = drawings;
-    }
-    if (detailedDescription) {
-      newPatent.detailedDescription = detailedDescription;
-    }
-    if (claims) {
-      newPatent.claims = claims;
-    }
-    if (inventor) {
-      newPatent.inventor = inventor;
-    }
-    if (references) {
-      newPatent.references = references;
-    }
-    if (acknowledgments) {
-      newPatent.acknowledgments = acknowledgments;
-    }
-    if (committeeMembers) {
-      newPatent.committeeMembers = committeeMembers;
-    }
-
-    // Find the patent to be updated and update it
-    let patent = await Patents.findById(req.params.id);
+    const patent = await Patents.findById(req.params.id);
     if (!patent) {
-      return res.status(404).send("Not Found");
+      return res.status(404).json({ message: "Patent not found" });
     }
 
-    // Add any additional conditions for authorization if needed
-    // For example, you might want to check if the user making the request has the right permissions
+    patent.status.DSRIC = true;
+    await patent.save();
 
-    updatedPatent = await Patents.findByIdAndUpdate(
-      req.params.id,
-      { $set: newPatent },
-      { new: true }
-    );
-    const receiverEmail = "athgupta2005@gmail.com";
-    const senderEmail = "riyajindal769@gmail.com";
-    const emailSubject = "Patent is updated";
-    const emailMessage =
-      "Congratulations! You have successfully updated your patent claim";
+    const receiverEmail = patent.email;
+    const senderEmail = "iprcelliitr84@gmail.com";
+    const emailSubject = "Patent is approved";
+    const emailMessage = `DSRI add some comment and approve`;
+
+    const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
+    const senderGmail = "iprcelliitr84@gmail.com";
+    const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const Subject = "Patent is approved by HOD";
+    const Message = `DSRI add some comment and approve`;
+
+
+
 
     await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
-    res.json({ updatedPatent });
+    await sendMail(AdiEmail, senderGmail, Subject, Message);
+    res.json(patent);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
   }
 });
+
+// Reject patent route
+router.put("DSRI/patents/:id/reject", async (req, res) => {
+  try {
+    const patent = await Patents.findById(req.params.id);
+    if (!patent) {
+      return res.status(404).json({ message: "Patent not found" });
+    }
+
+    patent.status.DSRIC = false;
+    await patent.save();
+
+    const receiverEmail = patent.email;
+    const senderEmail = "iprcelliitr84@gmail.com";
+    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const emailSubject = "Patent is rejected";
+    const emailMessage = `DSRI add some comment and rejected`;
+
+
+    const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
+    const senderGmail = "iprcelliitr84@gmail.com";
+    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    const Subject = "Patent is approved by HOD";
+    const Message = `DSRI add some comment and rejected`;
+
+
+    await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+    await sendMail(AdiEmail, senderGmail, Subject, Message);
+    res.json(patent);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+router.post("/patents/:id/comment", async (req, res) => {
+  try {
+    let patent = await Patents.findById(req.params.id);
+    if (!patent) {
+      return res.status(404).send("Patent not found");
+    }
+    const { comment } = req.body;
+    console.log(comment)
+    // patent.DSRICOMM = patent.comments || [];
+    patent.DSRICOMM = comment;
+    await patent.save();
+    res.json({ message: "Comment posted" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+// Delete committee member
+router.delete('/delete-committee/:patentId/:committeeMemberId', async (req, res) => {
+  const { patentId, committeeMemberId } = req.params;
+  console.log(patentId);
+  console.log(committeeMemberId);
+  try {
+    const patent = await Patents.findById(patentId);
+    console.log(patent);
+    if (!patent) return res.status(404).json({ msg: 'Patent not found' });
+
+    // Find the committee member index
+    const memberIndex = patent.committeeMembers.findIndex(member => member._id.toString() === committeeMemberId);
+    if (memberIndex === -1) return res.status(404).json({ msg: 'Committee member not found' });
+
+    // Remove the committee member
+    patent.committeeMembers.splice(memberIndex, 1);
+    await patent.save();
+    res.json({ msg: 'Committee member removed' });
+  } catch (error) {
+    res.status(500).json({ msg: 'Server error', error });
+  }
+});
+
+// Add committee member
+router.post('/add-committee/:patentId', async (req, res) => {
+  const { patentId } = req.params;
+  const newMembers = req.body; // Expecting an array of committee member objects
+  try {
+    const patent = await Patents.findById(patentId);
+    if (!patent) return res.status(404).json({ msg: 'Patent not found' });
+
+    newMembers.forEach(member => {
+      patent.committeeMembers.push(member);
+    });
+
+    await patent.save();
+    res.json(patent.committeeMembers); // Return the updated committee members
+  } catch (error) {
+    res.status(500).json({ msg: 'Server error', error });
+  }
+});
+
+
+
+router.post("/ADI/approve/comemb/:id", async (req, res) => {
+  try {
+
+    let patent = await Patents.findById(req.params.id);
+    if (!patent) {
+      return res.status(404).send("Patent not found");
+    }
+    patent.status.ADI = true;
+    const receiverEmail = patent.email;
+    const senderEmail = "iprcelliitr84@gmail.com";
+    const emailSubject = "Patent Committee Members Updated";
+    const emailMessage =
+      "Congratulations! The committee members for your patent have been approved.";
+
+
+
+    // const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
+    // const senderGmail = "iprcelliitr84@gmail.com";
+    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    // const Subject = "Patent is approved by HOD";
+    // const Message = `HOD approve the details, please visit the website to verify: ${websiteURL}`;
+    await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+    // await sendMail(AdiEmail, senderGmail, Subject, Message);
+
+    res.json();
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.post("/DSRI/recommendation/:id", async (req, res) => {
+  try {
+
+    let patent = await Patents.findById(req.params.id);
+    if (!patent) {
+      return res.status(404).send("Patent not found");
+    }
+
+    const receiverEmail = "deepak988088@gmail.com";
+    const senderEmail = "iprcelliitr84@gmail.com";
+    const websiteURL = `http://localhost:8080/DSRI?id=${req.params.id}`;
+
+    const emailSubject = "Patent Committee Members Updated";
+    const emailMessage =
+      `Recommendation comment. please visit the website ${websiteURL}`;
+
+
+
+    // const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
+    // const senderGmail = "iprcelliitr84@gmail.com";
+    // const websiteURL = `http://localhost:8080/ViewPatentDetail?id=${req.params.id}`;
+    // const Subject = "Patent is approved by HOD";
+    // const Message = `HOD approve the details, please visit the website to verify: ${websiteURL}`;
+    await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+    // await sendMail(AdiEmail, senderGmail, Subject, Message);
+
+    res.json();
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 
 router.post("/addprofile", async (req, res) => {
   try {
@@ -325,7 +463,7 @@ router.get(
         const receiverEmail = member.email;
         const senderEmail = "riyajindal769@gmail.com";
         const emailSubject = "Invitation to Join Committee";
-        const emailMessage = `You have been approved to join the committee. Click the following link to accept: https://ircpc-backend.onrender.com/api/profiles/accept-invite/${token} or reject: https://ircpc-backend.onrender.com/api/profiles/reject-invite/${token} the invitation `;
+        const emailMessage = `You have been approved to join the committee. Click the following link to accept: http://localhost:5000/api/profiles/accept-invite/${token} or reject: http://localhost:5000/api/profiles/reject-invite/${token} the invitation `;
         await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
       });
       res.status(200).json({ message: "Emails sent successfully" });

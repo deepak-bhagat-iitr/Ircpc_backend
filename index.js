@@ -57,7 +57,7 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
       name: req.file.originalname,
       path: req.file.path
     };
-
+    console.log(req.file)
     const newPatent = new Patents({
       email,
       title,
@@ -93,6 +93,37 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+// // Send email route
+// app.post('/api/profiles/email', async (req, res) => {
+//   const { sendEmail } = req.body;
+
+
+
+//     const receiverEmail = sendEmail;
+//     const senderEmail = "iprcelliitr84@gmail.com";
+//     const emailSubject = "Patent is added";
+//     const emailMessage = "Congratulations! You have successfully added your patent claim";
+
+//     // Send email notifications
+//     try {
+//       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+
+//       const websiteURL = `http://localhost:8080/ViewPatent?id=${savedPatentId}`;
+//       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
+
+//       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);
+
+//       res.status(200).json({ message: "Emails sent successfully" });
+//     } catch (emailError) {
+//       console.error("Error sending email:", emailError.message);
+//       res.status(500).json({ message: "Error sending email" });
+//     }
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).send("Server Error");
+//   }
+// });
 
 
 app.get('/api/profiles/addpatents/pdfs', async (req, res) => {
