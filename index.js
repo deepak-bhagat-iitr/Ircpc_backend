@@ -74,12 +74,12 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
 
     const receiverEmail = depEmail;
     const senderEmail = "iprcelliitr84@gmail.com";
-    const emailSubject = "Patent is added";
-    const emailMessage = "Congratulations! You have successfully added your patent claim";
+    const emailSubject = "Patent is added by someone";
+    // const emailMessage = "Congratulations! You have successfully added your patent claim";
 
     // Send email notifications
     try {
-      await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+      // await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
       const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatent?id=${savedPatent._id}`;
       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);

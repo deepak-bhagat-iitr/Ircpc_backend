@@ -67,7 +67,7 @@ router.put("/patents/:id/approve", async (req, res) => {
 
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
-    const emailSubject = "Patent is approved";
+    const emailSubject = "Patent is approved by HOD";
     const emailMessage = `A new patent is approved by HOD`;
 
     const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
@@ -102,8 +102,8 @@ router.put("/patents/:id/reject", async (req, res) => {
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
     const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
-    const emailSubject = "Patent is rejected";
-    const emailMessage = `A patent has been rejected by HOD. Please visit the website to see the patent details: ${websiteURL}`;
+    const emailSubject = "Patent is rejected by HOD";
+    const emailMessage = `A patent has been rejected by HOD`;
 
     await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
     res.json(patent);
@@ -130,13 +130,13 @@ router.put("/DSRI/patents/:id/approve", async (req, res) => {
 
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
-    const emailSubject = "Patent is approved";
+    const emailSubject = "Patent is approved by DSRIC";
     const emailMessage = `DSRI add some comment and approve`;
 
     const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     const senderGmail = "iprcelliitr84@gmail.com";
     const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
-    const Subject = "Patent is approved by HOD";
+    const Subject = "Patent is approved by DSRIC";
     const Message = `DSRI add some comment and approve`;
 
 
@@ -165,14 +165,14 @@ router.put("DSRI/patents/:id/reject", async (req, res) => {
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
     // const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
-    const emailSubject = "Patent is rejected";
+    const emailSubject = "Patent is rejected by DSRIC";
     const emailMessage = `DSRI add some comment and rejected`;
 
 
     const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     const senderGmail = "iprcelliitr84@gmail.com";
     // const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
-    const Subject = "Patent is approved by HOD";
+    const Subject = "Patent is approved by DSRIC";
     const Message = `DSRI add some comment and rejected`;
 
 
@@ -248,32 +248,26 @@ router.post('/add-committee/:patentId', async (req, res) => {
 });
 
 
-
 router.post("/ADI/approve/comemb/:id", async (req, res) => {
   try {
-
     let patent = await Patents.findById(req.params.id);
     if (!patent) {
       return res.status(404).send("Patent not found");
     }
-    patent.status.ADI = true;
+    patent.status.ADI = true; // Assuming status is an object with ADI property
+    await patent.save();
+
+    // Debugging: Log the updated patent object
+    console.log(patent);
+
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
     const emailSubject = "Patent Committee Members Updated";
     const emailMessage =
       "Congratulations! The committee members for your patent have been approved.";
 
-
-
-    // const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
-    // const senderGmail = "iprcelliitr84@gmail.com";
-    // const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
-    // const Subject = "Patent is approved by HOD";
-    // const Message = `HOD approve the details, please visit the website to verify: ${websiteURL}`;
     await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
-    // await sendMail(AdiEmail, senderGmail, Subject, Message);
-
-    res.json();
+    res.json("done");
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
