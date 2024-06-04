@@ -116,7 +116,6 @@ router.put("/patents/:id/reject", async (req, res) => {
 
 
 
-
 // Approve patent route
 router.put("/DSRI/patents/:id/approve", async (req, res) => {
   try {
@@ -130,20 +129,39 @@ router.put("/DSRI/patents/:id/approve", async (req, res) => {
 
     const receiverEmail = patent.email;
     const senderEmail = "iprcelliitr84@gmail.com";
-    const emailSubject = "Patent is approved by DSRIC";
-    const emailMessage = `DSRI add some comment and approve`;
 
     const AdiEmail = "deepak1@me.iitr.ac.in"; // ADI
     const senderGmail = "iprcelliitr84@gmail.com";
-    const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatentDetail?id=${req.params.id}`;
     const Subject = "Patent is approved by DSRIC";
     const Message = `DSRI add some comment and approve`;
 
 
-
-
-    await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+    // Sending the initial email to ADI
     await sendMail(AdiEmail, senderGmail, Subject, Message);
+
+    // Sending the detailed message to the patent owner
+    const detailedSubject = "DSRIC Approved Your Patent Assessment";
+    const detailedMessage = `
+    Prof. X,
+    Department of PQR,
+
+    In order to assess the disclosures entitled “XXXXXXXXXXXXX” submitted by you, the following Intellectual Property Assessment Committee (IPAC) is approved by the competent authority.
+
+    (i) Prof. Vivek Kumar Malik, ADII (Chairman)
+    (ii) Prof. PP, (XXX)
+    (iii) Prof. QQ, (YYY)
+    (iv) Prof. RR, (ZZZ)
+
+    You are requested to coordinate with IPAC members so that meeting of IPAC can be held at the earliest. This is for your information and necessary action.
+    
+    DSRIC Comment: ${patent.DSRICOMM}
+
+    (Prof. Vivek Kumar Malik)
+    Coordinator, IPR Cell
+  `;
+
+    await sendMail(receiverEmail, senderEmail, detailedSubject, detailedMessage.trim());
+
     res.json(patent);
   } catch (error) {
     console.error(error.message);
@@ -247,7 +265,6 @@ router.post('/add-committee/:patentId', async (req, res) => {
   }
 });
 
-
 router.post("/ADI/approve/comemb/:id", async (req, res) => {
   try {
     let patent = await Patents.findById(req.params.id);
@@ -267,6 +284,20 @@ router.post("/ADI/approve/comemb/:id", async (req, res) => {
       "Congratulations! The committee members for your patent have been approved.";
 
     await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
+
+    // Send email to committee members
+    if (Array.isArray(patent.committeeMembers)) {
+      const committeeEmailSubject = "You Have Been Approved as a Committee Member";
+      const committeeEmailMessage =
+        "Dear Committee Member, you have been approved as a committee member for a patent.";
+
+      for (const member of patent.committeeMembers) {
+        if (member.email) {
+          await sendMail(member.email, senderEmail, committeeEmailSubject, committeeEmailMessage);
+        }
+      }
+    }
+
     res.json("done");
   } catch (error) {
     console.error(error.message);
@@ -286,7 +317,7 @@ router.post("/DSRI/recommendation/:id", async (req, res) => {
     const senderEmail = "iprcelliitr84@gmail.com";
     const websiteURL = `https://ircpc-frontend.vercel.app/DSRI?id=${req.params.id}`;
 
-    const emailSubject = "Patent Committee Members Updated";
+    const emailSubject = "Report of IPAC";
     const emailMessage =
       `Recommendation comment. please visit the website ${websiteURL}`;
 

@@ -18,17 +18,17 @@ const pdfSchema = new mongoose.Schema({
 const patentSchema = new Schema({
   email: { type: String, required: true },
   title: { type: String, required: true },
+  patentType: { type: String, required: true },
   fieldOfInvention: { type: String, required: true },
   detailedDescription: { type: String, required: true },
   inventor: {
     name: String,
-    background: String,
+    department: String
   },
   comments: String,
   status: {
     HOD: { type: Boolean, default: false },
     ADI: { type: Boolean, default: false },
-    // COMMEM: { type: Boolean, default: false },
     DSRIC: { type: Boolean, default: false }
   },
   DSRICOMM: String,

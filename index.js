@@ -25,7 +25,7 @@ const upload = multer({ storage: storage });
 
 
 app.use(cors({
-  origin: ['https://ircpc-frontend.vercel.app', 'https://ircpc-frontend.vercel.app'],
+  origin: 'https://ircpc-frontend.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -51,13 +51,19 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
       inventor,
       committeeMembers,
       status,
-      depEmail
+      depEmail,
+      patentType
     } = req.body;
+
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
+    }
+
     const details = {
       name: req.file.originalname,
       path: req.file.path
     };
-    console.log(req.file)
+
     const newPatent = new Patents({
       email,
       title,
@@ -65,31 +71,33 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
       detailedDescription,
       inventor,
       committeeMembers,
+      patentType,
       pdf: details,
       comments: "no comments yet",
       status
     });
-    console.log(newPatent);
+
     const savedPatent = await newPatent.save();
 
     const receiverEmail = depEmail;
     const senderEmail = "iprcelliitr84@gmail.com";
     const emailSubject = "Patent is added by someone";
-    // const emailMessage = "Congratulations! You have successfully added your patent claim";
+    const receEmail = email;
+    const Subject = "Patent added";
+    const Message = "You have successfully added your patent";
 
-    // Send email notifications
     try {
-      // await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
       const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatent?id=${savedPatent._id}`;
       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);
+      await sendMail(receEmail, senderEmail, Subject, Message);
     } catch (emailError) {
       console.error("Error sending email:", emailError.message);
     }
 
     res.json(savedPatent); // Send the saved patent as response
   } catch (error) {
-    console.error(error.message);
+    console.error("Error saving patent:", error.message);
     res.status(500).send("Server Error");
   }
 });
