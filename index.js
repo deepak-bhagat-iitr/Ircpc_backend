@@ -25,7 +25,7 @@ const upload = multer({ storage: storage });
 
 
 app.use(cors({
-  origin: 'http://localhost:8080',
+  origin: 'https://ircpc-frontend.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -87,7 +87,7 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
     const Message = "You have successfully added your patent";
 
     try {
-      const websiteURL = `http://localhost:8080/ViewPatent?id=${savedPatent._id}`;
+      const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatent?id=${savedPatent._id}`;
       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);
       await sendMail(receEmail, senderEmail, Subject, Message);
@@ -117,7 +117,7 @@ app.post("/api/profiles/addpatents", upload.single('pdf'), async (req, res) => {
 //     try {
 //       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage);
 
-//       const websiteURL = `http://localhost:8080/ViewPatent?id=${savedPatentId}`;
+//       const websiteURL = `https://ircpc-frontend.vercel.app/ViewPatent?id=${savedPatentId}`;
 //       const emailMessage1 = `Someone has added a patent claim, please visit the website to verify: ${websiteURL}`;
 
 //       await sendMail(receiverEmail, senderEmail, emailSubject, emailMessage1);
