@@ -76,7 +76,7 @@ router.post('/channeli', async (req, res) => {
     const { authcode } = req.body;
     const client_id = "ghTOIagj0bWyje4tT33ooKMbGiSmbwL7oD0LdlpM";
     const client_secret = "E7WLEzBRzmLwq2hxcl10dQPfX4iw8z8VLERkGnuFvfHf5ZdnqDV9JoteO7npISadedzM3KmedrwnHCcQWV8H8K1UucMkytnXByQ5eu8jiesboROqGYuyPmFYvqtzo29X";
-    const redirect_uri = "https://ircpc-frontend.vercel.app/";
+    const redirect_uri = "http://localhost:8080/";
     const retrieve_token_uri = "https://channeli.in/open_auth/token/";
     const retrieve_data_uri = "https://channeli.in/open_auth/get_user_data/";
 
